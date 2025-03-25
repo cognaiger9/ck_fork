@@ -93,25 +93,25 @@ auto create_args(int argc, char* argv[])
         .insert("h", "8192", "hidden_size of this model")
         .insert("i", "8192", "intermediate_size between 2 gemms of FFN")
         .insert("stride", "-1", "stride per row, if -1 then equal to hidden_size")
-        .insert("bm", "32", "blocking factor for sorted tokens")
-        .insert("tp", "8", "tensor parallel size")
+        .insert("bm", "32", "blocking factor for sorted tokens") // ?
+        .insert("tp", "8", "tensor parallel size") // ?
         .insert("v", "1", "cpu validation or not")
         .insert("kname", "1", "print kernel name or not")
         .insert("prec_i", "bf16", "input precision")
         .insert("prec_w", "bf16", "weight precision")
         .insert("prec_o", "bf16", "output precision")
-        .insert("prec_st", "auto", "token scale data type. auto will set to fp32")
-        .insert("prec_sw", "auto", "weight scale data type. auto will set to fp32")
-        .insert("prec_sq", "auto", "(dynamic) smooth quant data type. auto will set to fp32")
-        .insert("prec_kw", "auto", "topk-weight data type. auto will set to fp32")
-        .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant, 2:dynamic-quant")
+        .insert("prec_st", "auto", "token scale data type. auto will set to fp32") // ?
+        .insert("prec_sw", "auto", "weight scale data type. auto will set to fp32") // ?
+        .insert("prec_sq", "auto", "(dynamic) smooth quant data type. auto will set to fp32") // ?
+        .insert("prec_kw", "auto", "topk-weight data type. auto will set to fp32") // ?
+        .insert("fquant", "0", "fused-quant, 0:no, 1:smooth-dynamic-quant, 2:dynamic-quant") // ?
         .insert(
             "gate_only", "1", "w0(gate/up) style, 0:gate+up will double interm size, 1:only gate")
         .insert("api", "0", "benchmark api set: 0:fused-moe(moe-gemm+moe-sorting), 1:moe-gemm")
         .insert("act", "0", "activation after first gemm. 0:gelu, 1:silu")
         .insert("balance",
                 "0",
-                "if set to 1, will try balance the expert in topk-ids(convenient for testing)")
+                "if set to 1, will try balance the expert in topk-ids(convenient for testing)") // ?
         .insert("init",
                 "1",
                 "init method. 0:random stepped float(fast). 1: random uniform[-0.5, 0.5], 2:rand "
@@ -233,6 +233,8 @@ bool run(const ck_tile::ArgParser& arg_parser)
     ck_tile::HostTensor<TopkWeightDataType> topk_weight_host({tokens, topk});        // to be sort
     ck_tile::HostTensor<IndexDataType> local_expert_mask_host({experts});
 
+    // tokens assigned to each expert are grouped in block size of block_m -> padding each expert's
+    // group to multiple of block_m
     int max_num_tokens_padded = topk * tokens + experts * block_m - topk;
     ck_tile::HostTensor<IndexDataType> sorted_token_ids_host({max_num_tokens_padded});
     ck_tile::HostTensor<TopkWeightDataType> sorted_weight_host({max_num_tokens_padded});
@@ -276,6 +278,7 @@ bool run(const ck_tile::ArgParser& arg_parser)
     }
 
     // permute weight
+    // create new tensor for permuted weight [b, n, k] -> [b, n / 16, k / 32, 4, 16, 8]
     ck_tile::HostTensor<GDataType> g_perm_host = shuffle_moe_weight(g_host, prec_w, 1);
     ck_tile::HostTensor<DDataType> d_perm_host = shuffle_moe_weight(d_host, prec_w, 1);
 
