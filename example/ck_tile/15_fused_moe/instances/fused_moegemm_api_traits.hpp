@@ -23,7 +23,7 @@ struct fmoe_ // traits, ugly name, only used for internal
 {
     using TypeConfig = FusedMoeGemmTypeConfig<I, W, O, ST, SW, SQ, KW>;
 
-    using ADataType            = ck_tile::remove_cvref_t<typename TypeConfig::ADataType>;
+    using ADataType            = ck_tile::remove_cvref_t<typename TypeConfig:: >;
     using GDataType            = ck_tile::remove_cvref_t<typename TypeConfig::GDataType>;
     using DDataType            = ck_tile::remove_cvref_t<typename TypeConfig::DDataType>;
     using AccDataType          = ck_tile::remove_cvref_t<typename TypeConfig::AccDataType>;

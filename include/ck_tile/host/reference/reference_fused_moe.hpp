@@ -89,6 +89,7 @@ void reference_fused_moe(
 
     int max_num_tokens_padded = topk * tokens + experts * block_m - topk;
     // assert();
+    // process each token in sorted token ids
     auto f = [&](auto i_flatten) {
         ck_tile::index_t i_tile = i_flatten / block_m;
         if(i_tile >= num_sorted_tiles)
