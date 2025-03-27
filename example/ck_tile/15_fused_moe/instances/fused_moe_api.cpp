@@ -70,6 +70,7 @@ float fused_moe(fused_moe_traits t, fused_moe_args a, const ck_tile::stream_conf
     float r0 = -1;
     float r1 = -1;
 
+    // launch arbitrary number of kernels with optional timer(selected by stream_config)
     float r = ck_tile::launch_kernel(
         s,
         [=, &r0](const ck_tile::stream_config&) { r0 = fused_moesorting(t0, a0, s_sub); },

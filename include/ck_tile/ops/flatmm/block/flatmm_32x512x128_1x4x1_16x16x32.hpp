@@ -381,6 +381,7 @@ struct Flatmm_32x512x128_1x4x1_16x16x32_Base // for f16/bf16
           "v124", "v125", "v126", "v127"
 // clang-format on
 
+// check if can replace 
 struct Flatmm_32x512x128_1x4x1_16x16x32_BF16 : public Flatmm_32x512x128_1x4x1_16x16x32_Base
 {
     using ADataType = bf16_t;

@@ -313,6 +313,7 @@ struct FusedMoeGemmPipeline_FlatmmUk
         auto bridge_sst_win = [&]() {
             constexpr auto desc_ = Policy::template MakeBridgeLdsStoreForUKDesc<Problem>();
             constexpr auto dist_ = Policy::template GetUK_0<Problem>().MakeCBlockDist();
+            // recheck
             return make_tile_window_linear(make_tensor_view<address_space_enum::lds>(
                                                reinterpret_cast<YDataType*>(smem), desc_),
                                            desc_.get_lengths(),
@@ -329,6 +330,7 @@ struct FusedMoeGemmPipeline_FlatmmUk
 
         auto uk_0 = Policy::template GetUK_0<Problem>();
 
+        // write ?
         auto y_pre = [&]() {
             if constexpr(IsGateOnly)
             {
@@ -396,7 +398,7 @@ struct FusedMoeGemmPipeline_FlatmmUk
         }();
 
         block_sync_lds();
-
+        
         store_tile(bridge_sst_win, y_pre);
         block_sync_lds();
 

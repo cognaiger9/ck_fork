@@ -93,7 +93,7 @@ auto create_args(int argc, char* argv[])
         .insert("h", "8192", "hidden_size of this model")
         .insert("i", "8192", "intermediate_size between 2 gemms of FFN")
         .insert("stride", "-1", "stride per row, if -1 then equal to hidden_size")
-        .insert("bm", "32", "blocking factor for sorted tokens") // ?
+        .insert("bm", "32", "blocking factor for sorted tokens")
         .insert("tp", "8", "tensor parallel size") // ?
         .insert("v", "1", "cpu validation or not")
         .insert("kname", "1", "print kernel name or not")
@@ -617,6 +617,12 @@ int main(int argc, char* argv[])
     else if(prec_i == "fp16" && prec_w == "fp16" && prec_o == "fp16" && prec_kw == "fp32")
     {
         return run<ck_tile::fp16_t, ck_tile::fp16_t, ck_tile::fp16_t, float, float, float, float>(
+                   arg_parser)
+                   ? 0
+                   : -2;
+    } else if(prec_i == "int8" && prec_w == "int8" && prec_o == "int8" && prec_kw == "fp32")
+    {
+        return run<ck_tile::int8_t, ck_tile::int8_t, ck_tile::int8_t, float, float, float, float>(
                    arg_parser)
                    ? 0
                    : -2;

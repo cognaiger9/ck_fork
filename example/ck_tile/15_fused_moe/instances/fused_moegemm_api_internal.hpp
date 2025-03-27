@@ -15,6 +15,7 @@ template <typename Ts_>
 float fused_moegemm_(const ck_tile::stream_config& s, fused_moegemm_args a)
 {
     using f_traits = ck_tile::FusedMoeGemmTraits<Ts_::GateOnly, Ts_::FusedQuant == 1, 1 /*atomic*/>;
+    // define blocksize, warpsize, etc.
     using f_shape  = ck_tile::FusedMoeGemmShape<typename Ts_::BlockTile_0,
                                                typename Ts_::WarpPerBlock_0,
                                                typename Ts_::WarpTile_0,

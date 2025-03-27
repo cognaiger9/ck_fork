@@ -30,4 +30,5 @@ struct FusedMoeGemmTilePartitioner_Linear
         return dim3(ns, ms, 1);
     }
 };
+
 } // namespace ck_tile

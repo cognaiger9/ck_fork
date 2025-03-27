@@ -81,7 +81,7 @@ void reference_fused_moe(
     assert(sorted_weight_host.get_num_of_dimension() == 1);
     assert(sorted_expert_ids_host.get_num_of_dimension() == 1);
     assert(num_sorted_tiles_host.get_element_size() == 1);
-    ck_tile::index_t num_sorted_tiles    = num_sorted_tiles_host.mData[0] / block_m;
+    ck_tile::index_t num_sorted_tiles    = num_sorted_tiles_host.mData[0] / block_m; // confused name
     ck_tile::index_t intermediate_size_0 = intermediate_size * (gate_only ? 1 : 2);
     ck_tile::index_t intermediate_size_1 = intermediate_size;
 
