@@ -168,7 +168,7 @@ struct DeviceGemmMultiD_ABScale_Xdl_CShuffle_V3
             }
 
             index_t gdx, gdy, gdz;
-            std::tie(gdx, gdy, gdz) = GridwiseGemm::CalculateGridSize(arg.M, arg.N, arg.KBatch);
+            std::tie(gdx, gdy, gdz) = GridwiseGemm::CalculateGridSize(arg.M, arg.N, arg.KBatch); // 
 
             float ave_time = 0;
 
